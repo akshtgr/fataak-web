@@ -1,7 +1,9 @@
-import type { NextConfig } from "next";
+// Removed TypeScript type import and annotation
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   /* config options here */
+  // You might add reactStrictMode: true here later if needed
 };
 
 export default nextConfig;
