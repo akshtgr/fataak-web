@@ -1,6 +1,12 @@
+'use client'; // <-- This is the most important change
+
 import Image from 'next/image';
+import { useCartStore } from '@/store/cartStore'; // <-- Import the store
 
 export default function ProductCard({ product }) {
+  // Get the 'addToCart' function from our store
+  const addToCart = useCartStore((state) => state.addToCart);
+
   if (!product) {
     return null; // Don't render if no product
   }
@@ -15,7 +21,7 @@ export default function ProductCard({ product }) {
           fill
           style={{ objectFit: 'contain' }}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          priority={true} 
+          priority={true}
         />
       </div>
 
@@ -36,7 +42,10 @@ export default function ProductCard({ product }) {
       </div>
 
       {/* Add to Cart Button */}
-      <button className="w-full rounded-full bg-green-500 py-2 text-sm font-bold text-white transition-all hover:bg-green-600 active:scale-95">
+      <button
+        onClick={() => addToCart(product)} // <-- Add the onClick handler
+        className="w-full rounded-full bg-green-500 py-2 text-sm font-bold text-white transition-all hover:bg-green-600 active:scale-95"
+      >
         ADD
       </button>
     </div>

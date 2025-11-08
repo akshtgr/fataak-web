@@ -1,19 +1,20 @@
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css"; // <-- Make sure this line is here
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import Header from '@/components/Header'; // <-- Import the new Header
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata = {
-  title: "Fataak", // Changed title
-  description: "Fresh Veggies, Delivered Fast.", // Changed description
+  title: 'Fataak', // Changed title
+  description: 'Fresh Veggies, Delivered Fast.', // Changed description
 };
 
 export default function RootLayout({ children }) {
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Header /> {/* <-- Add the Header here */}
         {children}
       </body>
     </html>

@@ -4,13 +4,10 @@ import { collection, getDocs, query, where, limit } from 'firebase/firestore';
 
 /**
  * This function fetches products from your 'items' COLLECTION in Firestore.
- * This is the standard Firestore query method.
  */
 async function getProducts(filters = {}) {
   try {
-    // Get a reference to the COLLECTION named 'items'
     const itemsCol = collection(db, 'items');
-
     let q = query(itemsCol);
 
     // Apply filters
@@ -20,11 +17,8 @@ async function getProducts(filters = {}) {
     if (filters.category) {
       q = query(q, where('category', '==', filters.category));
     }
-
-    // Limit to 10 results for now
     q = query(q, limit(10));
 
-    // Execute the query
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
@@ -32,16 +26,26 @@ async function getProducts(filters = {}) {
       return [];
     }
 
-    // Map the documents found (e.g., 'tomato', 'apple') to an array
-    const products = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    // Map the documents and FIX the timestamp issue
+    const products = snapshot.docs.map((doc) => {
+      const data = doc.data();
+
+      // Convert Timestamp objects to simple, serializable ISO strings
+      return {
+        id: doc.id,
+        ...data,
+        created_at: data.created_at
+          ? data.created_at.toDate().toISOString()
+          : null,
+        updated_at: data.updated_at
+          ? data.updated_at.toDate().toISOString()
+          : null,
+      };
+    });
 
     return products;
   } catch (error) {
     console.error('Error fetching products:', error);
-    // This will help us if there's a rules/indexing error
     return [];
   }
 }
@@ -55,10 +59,9 @@ export default async function Home() {
 
   return (
     <main className="min-h-screen">
-      <div className="p-4">
-        <h1 className="text-4xl font-extrabold text-green-600">Fataak</h1>
-        <p className="text-lg text-gray-700">Fresh Veggies, Delivered Fast.</p>
-      </div>
+      {/* <div className="p-4">
+        We moved this to the new Header component
+      </div> */}
 
       <ProductScroll title="Featured Products" products={featuredProducts} />
       <ProductScroll title="Fresh Vegetables" products={vegetables} />
