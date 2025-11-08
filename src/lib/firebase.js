@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore'; // CHANGED BACK
 import { getAuth } from 'firebase/auth';
 
 // This config object READS from your .env.local file
@@ -12,11 +12,12 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
+// We REMOVED the databaseURL line
 
 // Initialize Firebase
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-const db = getFirestore(app);
+const db = getFirestore(app); // CHANGED BACK
 const auth = getAuth(app);
 
 export { app, db, auth };

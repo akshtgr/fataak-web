@@ -3,11 +3,13 @@ import { db } from '@/lib/firebase'; // Import our new firebase db connection
 import { collection, getDocs, query, where, limit } from 'firebase/firestore';
 
 /**
- * This function fetches products from your 'items' collection in Firestore.
+ * This function fetches products from your 'items' COLLECTION in Firestore.
+ * This is the standard Firestore query method.
  */
 async function getProducts(filters = {}) {
   try {
-    const itemsCol = collection(db, 'items'); // Your collection is named 'items'
+    // Get a reference to the COLLECTION named 'items'
+    const itemsCol = collection(db, 'items');
 
     let q = query(itemsCol);
 
@@ -19,8 +21,10 @@ async function getProducts(filters = {}) {
       q = query(q, where('category', '==', filters.category));
     }
 
+    // Limit to 10 results for now
     q = query(q, limit(10));
 
+    // Execute the query
     const snapshot = await getDocs(q);
 
     if (snapshot.empty) {
@@ -28,6 +32,7 @@ async function getProducts(filters = {}) {
       return [];
     }
 
+    // Map the documents found (e.g., 'tomato', 'apple') to an array
     const products = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -36,11 +41,12 @@ async function getProducts(filters = {}) {
     return products;
   } catch (error) {
     console.error('Error fetching products:', error);
+    // This will help us if there's a rules/indexing error
     return [];
   }
 }
 
-// This is now an 'async function'
+// This is an 'async function'
 export default async function Home() {
   // Fetch data on the server
   const featuredProducts = await getProducts({ isFeatured: true });

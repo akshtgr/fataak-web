@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* No @import or @tailwind rules are needed in Tailwind v4.
+  The plugin handles everything.
+*/
 
 body {
   background-color: #e0e0e0;
